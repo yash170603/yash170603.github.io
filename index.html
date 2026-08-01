@@ -1,67 +1,570 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Yash's World</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #ffffff;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-        .container {
-            max-width: 800px;
-            padding: 2rem;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-        }
-        h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-        p {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            margin-bottom: 2rem;
-        }
-        .cta-button {
-            display: inline-block;
-            padding: 12px 24px;
-            background-color: #ffffff;
-            color: #764ba2;
-            text-decoration: none;
-            border-radius: 25px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-        .cta-button:hover {
-            background-color: #764ba2;
-            color: #ffffff;
-            transform: translateY(-3px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yash Talreja — Backend Engineer</title>
+<meta name="description" content="Backend engineer, mostly Go. Moved 23M live payment configs off a monolith without losing a row.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;600;800;900&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#0B0E17;
+  --deep:#121828;
+  --rule:rgba(232,236,245,.11);
+  --rule-hi:rgba(232,236,245,.24);
+  --star:#E8ECF5;
+  --haze:#7C88A4;
+  --blood:#B01F31;
+  --blood-lo:rgba(176,31,49,.16);
+  --sodium:#E0A34A;
+
+  --display:'Big Shoulders Display',Impact,sans-serif;
+  --body:'Archivo',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+
+  --gut:clamp(20px,5vw,72px);
+  --max:1180px;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--void);color:var(--star);
+  font-family:var(--body);font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+a{color:inherit}
+::selection{background:var(--blood);color:var(--star)}
+:focus-visible{outline:2px solid var(--sodium);outline-offset:3px}
+
+/* ambient */
+#stars{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.nebula{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(58vw 46vw at 78% 6%, rgba(176,31,49,.13), transparent 62%),
+    radial-gradient(52vw 44vw at 12% 34%, rgba(56,84,168,.15), transparent 66%);
+}
+.grain{
+  position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.shell{position:relative;z-index:2}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gut)}
+
+/* nav */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:16px;padding:12px var(--gut);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--haze);
+  background:rgba(11,14,23,.72);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--rule);
+}
+.topbar .sig{color:var(--star);letter-spacing:.28em}
+.topbar nav{display:flex;gap:22px}
+.topbar nav a{text-decoration:none;transition:color .2s}
+.topbar nav a:hover{color:var(--sodium)}
+.live{display:inline-flex;align-items:center;gap:7px}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--blood);box-shadow:0 0 0 0 var(--blood);animation:pulse 2.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(176,31,49,.55)}70%{box-shadow:0 0 0 7px rgba(176,31,49,0)}100%{box-shadow:0 0 0 0 rgba(176,31,49,0)}}
+
+/* hero */
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:104px 0 28px}
+.eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--haze);display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:26px;
+}
+.eyebrow .sep{color:var(--blood)}
+.namemark{
+  font-family:var(--display);font-weight:900;
+  font-size:clamp(58px,14.6vw,188px);line-height:.82;letter-spacing:-.014em;
+  text-transform:uppercase;margin:0;
+}
+.namemark .b{display:block;color:rgba(232,236,245,.2)}
+@supports (-webkit-text-stroke:1px red){.namemark .b{color:transparent;-webkit-text-stroke:1.5px var(--rule-hi)}}
+.lede{
+  max-width:56ch;margin:30px 0 0;font-size:clamp(16px,2.1vw,20px);color:#C3CBDC;
+}
+.lede b{color:var(--star);font-weight:600}
+.lede .hl{color:var(--sodium);font-weight:500}
+
+/* telemetry readouts */
+.readouts{
+  margin-top:34px;border-top:1px solid var(--rule);
+  display:grid;grid-template-columns:repeat(3,1fr);
+}
+.ro{padding:17px 22px 17px 0;border-right:1px solid var(--rule)}
+.ro:last-child{border-right:0}
+.ro .v{font-family:var(--display);font-weight:800;font-size:clamp(30px,4.4vw,50px);line-height:1;letter-spacing:-.01em}
+.ro:nth-child(1) .v{color:var(--star)}
+.ro:nth-child(2) .v{color:var(--blood)}
+.ro:nth-child(3) .v{color:var(--sodium)}
+.ro .k{font-family:var(--mono);font-size:10px;letter-spacing:.17em;text-transform:uppercase;color:var(--haze);margin-top:9px}
+
+.ribbon{display:block;width:100%;height:58px;margin-top:18px}
+
+/* sections */
+.sec{padding:clamp(84px,11vw,150px) 0}
+.sechead{display:flex;align-items:baseline;gap:16px;margin-bottom:44px;border-bottom:1px solid var(--rule);padding-bottom:16px}
+.sechead .n{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--blood)}
+.sechead h2{
+  font-family:var(--display);font-weight:800;text-transform:uppercase;
+  font-size:clamp(30px,5.2vw,58px);line-height:.9;letter-spacing:-.005em;margin:0;
+}
+.sechead .note{margin-left:auto;font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;color:var(--haze);text-transform:uppercase}
+
+/* tale of the tape */
+.tape{border:1px solid var(--rule);background:rgba(18,24,40,.5)}
+.taperow{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;border-bottom:1px solid var(--rule)}
+.taperow:last-child{border-bottom:0}
+.taperow .l,.taperow .r{padding:16px 22px;font-size:14.5px}
+.taperow .l{text-align:right;color:var(--star);font-weight:500}
+.taperow .r{color:var(--haze);font-family:var(--mono);font-size:12.5px}
+.taperow .m{
+  padding:14px 18px;font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--haze);border-left:1px solid var(--rule);border-right:1px solid var(--rule);
+  min-width:132px;text-align:center;background:rgba(11,14,23,.5);
+}
+.taperow.big .l{font-family:var(--display);font-weight:800;font-size:clamp(22px,3.4vw,34px);line-height:1;text-transform:uppercase}
+.taperow.big .l em{font-style:normal;color:var(--blood)}
+
+.stacks{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-top:0}
+.stk{background:var(--void);padding:22px}
+.stk h3{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--sodium);margin:0 0 12px;font-weight:500}
+.stk p{margin:0;font-size:14px;color:#B9C2D6;line-height:1.75}
+
+/* log */
+.log{border-top:1px solid var(--rule)}
+.entry{border-bottom:1px solid var(--rule);padding:34px 0;display:grid;grid-template-columns:190px 1fr;gap:36px}
+.entry .when{font-family:var(--mono);font-size:11px;letter-spacing:.13em;color:var(--haze);text-transform:uppercase;line-height:1.9}
+.entry .when b{display:block;color:var(--star);font-weight:500;letter-spacing:.08em}
+.entry h3{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(24px,3.6vw,40px);line-height:.94;margin:0 0 4px}
+.entry .role{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--sodium);margin:0 0 22px;text-transform:uppercase}
+.hits{list-style:none;margin:0;padding:0;display:grid;gap:15px}
+.hits li{position:relative;padding-left:26px;font-size:15px;color:#BEC7D9;max-width:74ch}
+.hits li::before{
+  content:"";position:absolute;left:0;top:.62em;width:11px;height:1px;background:var(--blood);
+}
+.hits li strong{color:var(--star);font-weight:600}
+.hits li .num{font-family:var(--mono);font-size:.9em;color:var(--sodium)}
+
+/* builds */
+.build{border:1px solid var(--rule);padding:clamp(24px,3.4vw,40px);background:rgba(18,24,40,.42);display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(24px,4vw,54px)}
+.build h3{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(26px,4vw,44px);line-height:.94;margin:0 0 10px}
+.build .tags{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--haze);text-transform:uppercase;margin:0 0 20px}
+.build p.d{margin:0 0 22px;color:#BEC7D9;font-size:15px;max-width:52ch}
+.gains{list-style:none;margin:0;padding:0;display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.gains li{background:var(--void);padding:15px 18px;display:flex;justify-content:space-between;gap:18px;align-items:baseline;font-size:13.5px;color:var(--haze)}
+.gains li span{font-family:var(--mono);color:var(--star);font-size:12.5px;white-space:nowrap}
+.gains li span.hot{color:var(--blood)}
+
+/* off the clock */
+.clock{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.card{background:var(--void);padding:clamp(22px,2.8vw,34px);position:relative;overflow:hidden;transition:background .35s}
+.card:hover{background:var(--deep)}
+.card .ix{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--haze);text-transform:uppercase}
+.card h3{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:clamp(30px,4.6vw,52px);line-height:.86;margin:14px 0 16px}
+.card:nth-child(1) h3{color:#9FB4E8}
+.card:nth-child(2) h3{color:var(--blood)}
+.card:nth-child(3) h3{color:var(--sodium)}
+.card p{margin:0;font-size:14.5px;color:#B4BDD1;line-height:1.75}
+.card .mini{display:block;width:100%;height:46px;margin-top:22px}
+
+/* contact */
+.contact{padding-bottom:clamp(60px,8vw,110px)}
+.pitch{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:clamp(38px,8.6vw,112px);line-height:.86;margin:0 0 8px;letter-spacing:-.012em}
+.pitch em{font-style:normal;color:rgba(176,31,49,.55)}
+@supports (-webkit-text-stroke:1px red){.pitch em{color:transparent;-webkit-text-stroke:1.5px var(--blood)}}
+.pitch-sub{color:var(--haze);max-width:50ch;margin:22px 0 40px;font-size:16px}
+.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.links a{
+  background:var(--void);padding:20px 22px;text-decoration:none;
+  display:flex;flex-direction:column;gap:7px;transition:background .28s,color .28s;
+}
+.links a .lb{font-family:var(--mono);font-size:10px;letter-spacing:.19em;text-transform:uppercase;color:var(--haze)}
+.links a .lv{font-size:15px;color:var(--star);font-weight:500}
+.links a:hover{background:var(--blood-lo)}
+.links a:hover .lv{color:var(--sodium)}
+
+footer{
+  border-top:1px solid var(--rule);padding:22px var(--gut);
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;
+  font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--haze);
+}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(20px);transition:opacity .8s cubic-bezier(.2,.7,.3,1),transform .8s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1;transform:none}
+
+@media (max-width:900px){
+  .build{grid-template-columns:1fr}
+  .clock{grid-template-columns:1fr}
+  .entry{grid-template-columns:1fr;gap:18px}
+  .readouts{grid-template-columns:1fr;border-top:0}
+  .ro{border-right:0;border-top:1px solid var(--rule);padding-right:0}
+  .topbar nav{display:none}
+  .taperow{grid-template-columns:1fr}
+  .taperow .l{text-align:left;padding-bottom:4px}
+  .taperow .m{text-align:left;border:0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);min-width:0;background:transparent}
+  .taperow .r{padding-top:10px}
+  .taperow.big .l{font-size:26px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}
+  html{scroll-behavior:auto}
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome to Yash's World</h1>
-        <p>
-            Hello! I'm Yash, and I'm excited to share my journey with you. 
-            Explore my portfolio, discover my passions, and join me on this 
-            amazing adventure through creativity and innovation.
-        </p>
-        <a href="#" class="cta-button">Discover More</a>
+
+<canvas id="stars" aria-hidden="true"></canvas>
+<div class="nebula" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="shell">
+
+<div class="topbar">
+  <span class="sig">Y·T</span>
+  <nav>
+    <a href="#tape">Tape</a>
+    <a href="#log">Log</a>
+    <a href="#builds">Builds</a>
+    <a href="#clock">Off the clock</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <span class="live"><span class="dot"></span>Open to work</span>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span>Backend engineer</span><span class="sep">/</span>
+      <span>Go · Kafka · Kubernetes</span><span class="sep">/</span>
+      <span>Bengaluru, IN</span>
     </div>
+
+    <h1 class="namemark">Yash<span class="b">Talreja</span></h1>
+
+    <p class="lede">
+      I write backend systems in <b>Go</b>, mostly the kind where being wrong is expensive.
+      Spent a year on Razorpay's Backend Platform team moving payment infrastructure that
+      <span class="hl">could not go down while I moved it</span>.
+    </p>
+
+    <div class="readouts">
+      <div class="ro"><div class="v">23M+</div><div class="k">Live configs migrated · 0 lost</div></div>
+      <div class="ro"><div class="v">0→65</div><div class="k">Integration tests, wired into CI</div></div>
+      <div class="ro"><div class="v">~85%</div><div class="k">Cut from on-call triage time</div></div>
+    </div>
+
+    <canvas class="ribbon" data-mode="orbit" aria-hidden="true"></canvas>
+  </div>
+</header>
+
+<!-- TAPE -->
+<section class="sec" id="tape">
+  <div class="wrap">
+    <div class="sechead rv">
+      <span class="n">01</span>
+      <h2>Tale of the tape</h2>
+      <span class="note">measured, not claimed</span>
+    </div>
+
+    <div class="tape rv">
+      <div class="taperow big">
+        <div class="l">Golang <em>—</em> primary</div>
+        <div class="m">Weight class</div>
+        <div class="r">Services, migrations, ingestion pipelines, concurrency</div>
+      </div>
+      <div class="taperow">
+        <div class="l">1 year, production fintech</div>
+        <div class="m">Record</div>
+        <div class="r">Razorpay · payments infrastructure · Bengaluru</div>
+      </div>
+      <div class="taperow">
+        <div class="l">B.Tech Information Technology</div>
+        <div class="m">Corner</div>
+        <div class="r">Manipal University Jaipur · 8.63 / 10</div>
+      </div>
+      <div class="taperow">
+        <div class="l">Correctness under live traffic</div>
+        <div class="m">Reach</div>
+        <div class="r">Shadow reads, progressive cutover, idempotent writes</div>
+      </div>
+      <div class="taperow">
+        <div class="l">Reads code harder than it writes it</div>
+        <div class="m">Style</div>
+        <div class="r">Verification before trust — including for model output</div>
+      </div>
+    </div>
+
+    <div class="stacks rv">
+      <div class="stk"><h3>Languages</h3><p>Go · PHP · SQL · Java (data structures) · TypeScript</p></div>
+      <div class="stk"><h3>Backend</h3><p>REST APIs · Microservices · Gin · Kafka · OpenAI APIs · MCP</p></div>
+      <div class="stk"><h3>Infrastructure</h3><p>Kubernetes · Helm · Docker · Terraform · AWS (EC2, S3) · Spinnaker · CI/CD</p></div>
+      <div class="stk"><h3>Data</h3><p>MySQL · PostgreSQL · Redis · Trino</p></div>
+      <div class="stk"><h3>Observability</h3><p>Prometheus · Grafana</p></div>
+      <div class="stk"><h3>Frontend</h3><p>Next.js · React · Zustand</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- LOG -->
+<section class="sec" id="log">
+  <div class="wrap">
+    <div class="sechead rv">
+      <span class="n">02</span>
+      <h2>Flight log</h2>
+      <span class="note">chronological</span>
+    </div>
+
+    <div class="log">
+      <article class="entry rv">
+        <div class="when"><b>Aug 2025 — Jun 2026</b>Bengaluru, India<br>Software Engineer Intern</div>
+        <div>
+          <h3>Razorpay</h3>
+          <p class="role">Backend Platform · Go, Kafka, Kubernetes, PHP</p>
+          <ul class="hits">
+            <li><strong>Moved 23M+ production configurations off a legacy PHP monolith</strong> <span class="num">(12M live, 11M test)</span> into microservice-owned datastores. Trino-based ETL, progressive read/write cutover, Grafana rollout dashboards. <span class="num">Zero data loss.</span></li>
+            <li><strong>Built an MCP server exposing 10+ operational tools</strong> over OpenAI APIs so on-call engineers could query production audit logs in plain English — <span class="num">25–30 minutes</span> of manual dashboard filtering down to <span class="num">2–3 minutes</span> per investigation.</li>
+            <li><strong>Redesigned Watchtower</strong>, Razorpay's audit and observability platform, with high-throughput HTTP and Kafka ingestion centralizing infrastructure events across deploys, dynamic configs, WAF policies and A/B rollouts.</li>
+            <li><strong>Took integration test coverage from 0 to 65</strong> on the recurring payments services, wired into the CI pipeline — release confidence where there previously wasn't any.</li>
+            <li><strong>Exposed 11 Basic Auth-protected internal routes to the admin dashboard</strong> through the Edge/Kong Terraform layer, enforcing AuthZ validation against verified admin user context.</li>
+            <li><strong>Engineered mandate and token reconciliation workflows</strong> for recurring payments with scheduler-driven validation and backward-compatible fallbacks, closing out several production incidents.</li>
+            <li><strong>Led adoption of Kubernetes DevStack environments and Helm charts</strong>, cutting local setup friction for engineers across multiple teams.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="entry rv">
+        <div class="when"><b>May — Jul 2025</b>Remote<br>Full Stack Intern</div>
+        <div>
+          <h3>StackGuard</h3>
+          <p class="role">React, Go, Kafka, AWS</p>
+          <ul class="hits">
+            <li><strong>Built Go and PostgreSQL microservices</strong>, tuning query performance through indexing, join strategy and schema design.</li>
+            <li><strong>Designed event-driven inter-service communication</strong> with Kafka and Go concurrency primitives — goroutines and channels — for asynchronous workflows.</li>
+            <li><strong>Shipped a GitHub App</strong> with OAuth authentication and scoped permissions, plus React dashboards using Zustand for internal automation workflows.</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- BUILDS -->
+<section class="sec" id="builds">
+  <div class="wrap">
+    <div class="sechead rv">
+      <span class="n">03</span>
+      <h2>Builds</h2>
+      <span class="note">own time</span>
+    </div>
+
+    <div class="build rv">
+      <div>
+        <h3>BlogVerse</h3>
+        <p class="tags">Next.js · TypeScript · Go · PostgreSQL · Docker · AWS</p>
+        <p class="d">
+          A microservices blogging platform — Next.js on the front, Go and TypeScript services behind it.
+          Built mostly to find out where the seams go when you split something this small into services,
+          and how much of a container you can throw away before it stops working.
+        </p>
+        <a class="lv" href="https://github.com/yash170603?tab=repositories" style="font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--sodium);text-decoration:none;border-bottom:1px solid var(--rule-hi);padding-bottom:3px">Source →</a>
+      </div>
+      <ul class="gains">
+        <li>Docker image size <span class="hot">1.5 GB → 253 MB</span></li>
+        <li>Multi-stage builds + layer caching <span>−80%</span></li>
+        <li>Media storage efficiency, S3 <span>+50–75%</span></li>
+        <li>Live content updates <span>Server-Sent Events</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- OFF THE CLOCK -->
+<section class="sec" id="clock">
+  <div class="wrap">
+    <div class="sechead rv">
+      <span class="n">04</span>
+      <h2>Off the clock</h2>
+      <span class="note">the honest part</span>
+    </div>
+
+    <div class="clock rv">
+      <div class="card">
+        <div class="ix">Look up</div>
+        <h3>Deep sky</h3>
+        <p>Astronomy is the only field where patience is the instrument. You point at nothing for hours and something resolves out of it. Debugging a distributed system is the same job with worse scenery.</p>
+        <canvas class="mini" data-mode="orbit" aria-hidden="true"></canvas>
+      </div>
+      <div class="card">
+        <div class="ix">Fight week</div>
+        <h3>MMA</h3>
+        <p>Nothing else strips excuses out this fast. Two people, no abstractions, and the thing either worked or it very publicly did not. It's the closest a sport gets to production.</p>
+        <canvas class="mini" data-mode="impact" aria-hidden="true"></canvas>
+      </div>
+      <div class="card">
+        <div class="ix">Headphones on</div>
+        <h3>Music</h3>
+        <p>Where the other two go quiet. Long sessions run on it, and the good code and the good listening tend to show up on the same nights.</p>
+        <canvas class="mini" data-mode="wave" aria-hidden="true"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="sec contact" id="contact">
+  <div class="wrap">
+    <canvas class="ribbon" data-mode="wave" aria-hidden="true" style="margin-bottom:34px"></canvas>
+    <h2 class="pitch rv">Send the <em>hard one</em></h2>
+    <p class="pitch-sub rv">Open to backend and platform roles — Go especially. If it involves live traffic, a migration nobody wants to own, or verifying that something a model wrote is actually safe to ship, that's the interesting end.</p>
+
+    <div class="links rv">
+      <a href="mailto:yashtalreja180@gmail.com"><span class="lb">Email</span><span class="lv">yashtalreja180@gmail.com</span></a>
+      <a href="https://github.com/yash170603" target="_blank" rel="noopener"><span class="lb">GitHub</span><span class="lv">yash170603</span></a>
+      <a href="https://www.linkedin.com/in/yash-talreja1706/" target="_blank" rel="noopener"><span class="lb">LinkedIn</span><span class="lv">yash-talreja1706</span></a>
+      <a href="https://leetcode.com/u/yashyeder/" target="_blank" rel="noopener"><span class="lb">LeetCode</span><span class="lv">yashyeder</span></a>
+      <a href="https://x.com/RunnYeder" target="_blank" rel="noopener"><span class="lb">X</span><span class="lv">@RunnYeder</span></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>Yash Talreja · Backend engineer</span>
+  <span>Built by hand · <span id="yr"></span></span>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  /* ---- starfield ---- */
+  var cv = document.getElementById('stars'), cx = cv.getContext('2d'), stars = [], W, H, dpr;
+  function seed(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = cv.width = innerWidth * dpr; H = cv.height = innerHeight * dpr;
+    var n = Math.round((innerWidth * innerHeight) / 12000);
+    stars = [];
+    for (var i = 0; i < n; i++){
+      stars.push({
+        x: Math.random() * W, y: Math.random() * H,
+        r: (Math.random() * 1.05 + .25) * dpr,
+        a: Math.random() * .55 + .12,
+        tw: Math.random() * .011 + .002,
+        p: Math.random() * Math.PI * 2,
+        vy: (Math.random() * .045 + .012) * dpr,
+        warm: Math.random() > .9
+      });
+    }
+  }
+  function drawStars(t){
+    cx.clearRect(0,0,W,H);
+    for (var i=0;i<stars.length;i++){
+      var s = stars[i];
+      var a = reduce ? s.a : s.a + Math.sin(t * s.tw + s.p) * .22;
+      if (a < .03) a = .03;
+      cx.beginPath();
+      cx.fillStyle = s.warm ? 'rgba(224,163,74,'+a+')' : 'rgba(232,236,245,'+a+')';
+      cx.arc(s.x, s.y, s.r, 0, 6.2832); cx.fill();
+      if (!reduce){ s.y -= s.vy; if (s.y < -4){ s.y = H + 4; s.x = Math.random()*W; } }
+    }
+  }
+  seed();
+  addEventListener('resize', seed);
+
+  /* ---- telemetry ribbons: one signal, three temperaments ---- */
+  var ribbons = [].slice.call(document.querySelectorAll('canvas.ribbon, canvas.mini'));
+  function fit(c){
+    var d = Math.min(window.devicePixelRatio || 1, 2), r = c.getBoundingClientRect();
+    c.width = Math.max(1, r.width * d); c.height = Math.max(1, r.height * d);
+    c._d = d;
+  }
+  ribbons.forEach(fit);
+  addEventListener('resize', function(){ ribbons.forEach(fit); });
+
+  function drawRibbon(c, t){
+    var g = c.getContext('2d'), w = c.width, h = c.height, d = c._d || 1;
+    var mode = c.dataset.mode, mid = h/2;
+    g.clearRect(0,0,w,h);
+
+    /* baseline */
+    g.strokeStyle = 'rgba(232,236,245,.07)'; g.lineWidth = 1 * d;
+    g.beginPath(); g.moveTo(0, mid); g.lineTo(w, mid); g.stroke();
+
+    /* tick marks */
+    g.strokeStyle = 'rgba(232,236,245,.11)';
+    for (var x = 0; x < w; x += 44 * d){
+      g.beginPath(); g.moveTo(x, mid - 4*d); g.lineTo(x, mid + 4*d); g.stroke();
+    }
+
+    var color = mode === 'impact' ? '#B01F31' : mode === 'wave' ? '#E0A34A' : '#8FA6DE';
+    g.strokeStyle = color; g.lineWidth = 1.5 * d; g.lineJoin = 'round';
+    g.beginPath();
+
+    var step = 2 * d, ph = reduce ? 0 : t / 1000;
+    for (var px = 0; px <= w; px += step){
+      var u = px / w, y;
+      if (mode === 'orbit'){
+        y = mid
+          + Math.sin(u * 7.2 + ph * .55) * (h * .17)
+          + Math.sin(u * 19 + ph * .3) * (h * .05);
+      } else if (mode === 'impact'){
+        /* sparse violent spikes over a quiet floor */
+        var seedv = Math.sin(u * 43.7 + Math.floor(ph * .8) * 2.1);
+        var spike = Math.pow(Math.max(0, Math.sin(u * 26 + ph * 1.3)), 14);
+        y = mid + Math.sin(u * 90) * (h * .022) - spike * seedv * (h * .42);
+      } else {
+        /* decaying waveform, smooth */
+        var env = Math.exp(-u * 1.7);
+        y = mid + Math.sin(u * 54 + ph * 2.1) * (h * .34) * env
+                + Math.sin(u * 13 - ph) * (h * .07) * env;
+      }
+      px === 0 ? g.moveTo(px, y) : g.lineTo(px, y);
+    }
+    g.stroke();
+
+    /* leading marker */
+    if (!reduce){
+      var hx = (ph * 90 * d) % w;
+      g.fillStyle = color; g.globalAlpha = .85;
+      g.fillRect(hx, mid - h*.5, 1 * d, h);
+      g.globalAlpha = 1;
+    }
+  }
+
+  var visible = new Set();
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ e.isIntersecting ? visible.add(e.target) : visible.delete(e.target); });
+    }, {rootMargin:'120px'});
+    ribbons.forEach(function(c){ io.observe(c); });
+  } else { ribbons.forEach(function(c){ visible.add(c); }); }
+
+  function loop(t){ drawStars(t); visible.forEach(function(c){ drawRibbon(c, t); }); requestAnimationFrame(loop); }
+  if (reduce){ drawStars(0); ribbons.forEach(function(c){ drawRibbon(c, 0); }); }
+  else requestAnimationFrame(loop);
+
+  /* ---- reveal ---- */
+  if ('IntersectionObserver' in window && !reduce){
+    var ro = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in'); ro.unobserve(e.target); } });
+    }, {threshold:.12, rootMargin:'0px 0px -60px'});
+    document.querySelectorAll('.rv').forEach(function(el){ ro.observe(el); });
+  } else {
+    document.querySelectorAll('.rv').forEach(function(el){ el.classList.add('in'); });
+  }
+})();
+</script>
 </body>
 </html>
